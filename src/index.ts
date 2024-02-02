@@ -1,15 +1,16 @@
 import { Hono } from 'hono'
-export { Counter } from './counter'
+export { DurableObjectHandler } from './durableObjectHandler'
 
 type Bindings = {
-  COUNTER: DurableObjectNamespace
+  DO: DurableObjectNamespace
+
 }
 
 const app = new Hono<{ Bindings: Bindings }>()
 
 app.get('*', async (c) => {
-  const id = c.env.COUNTER.idFromName('A')
-  const obj = c.env.COUNTER.get(id)
+  const id = c.env.DO.idFromName('A')
+  const obj = c.env.DO.get(id)
   const resp = await obj.fetch(c.req.url)
 
   if (resp.status === 404) {
