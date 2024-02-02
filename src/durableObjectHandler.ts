@@ -2,26 +2,12 @@ import { Hono } from 'hono'
 import { CounterValueState } from './counter'
 
 export class DurableObjectHandler {
-  stateHandler: CounterValueState
+  counterValueState: CounterValueState
   app: Hono = new Hono()
 
-  constructor(state: DurableObjectState) {
-    this.stateHandler = new CounterValueState(state)
+  constructor() {
+    this.counterValueState = new CounterValueState(this.app, undefined,)
 
-    this.app
-      .get('/increment', async (c) => {
-        const currentValue = await this.stateHandler.increment()
-        return c.text(currentValue.toString())
-      })
-
-      .get('/decrement', async (c) => {
-        const currentValue = await this.stateHandler.decrement()
-        return c.text(currentValue.toString())
-      })
-
-      .get('/', async (c) => {
-        return c.text(this.stateHandler.value.toString())
-      })
   }
 
   async fetch(request: Request) {
